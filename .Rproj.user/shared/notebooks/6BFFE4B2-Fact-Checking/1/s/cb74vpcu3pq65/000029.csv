@@ -1,0 +1,7 @@
+"0","#| label: Tidying Fact-Checked 1990-2000 data"
+"0","#| message: false"
+"0",""
+"0","# As per directions, using the previously fact-checked 1990-2000 data that was provided"
+"0","Fact_Checked_1990_2000_Path <- here(""Data_Raw"", ""Fact_Checked_Years.csv"")"
+"0",""
+"0","Fact_Checked_1990_2000 <- read.csv(Fact_Checked_1990_2000_Path)"
