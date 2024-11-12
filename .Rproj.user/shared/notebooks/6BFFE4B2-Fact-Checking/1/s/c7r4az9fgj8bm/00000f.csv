@@ -15,3 +15,7 @@
 "0","    Property_Crime_Rate_2023_per_100k = Property_Crimes_per_100k[Year == 2023],"
 "0","    Change_Property_Crime_Rate_per_100k = (Property_Crime_Rate_2023_per_100k - Property_Crime_Rate_2020_per_100k) / Property_Crime_Rate_2020_per_100k,"
 "0",")"
+"0",""
+"0","# Saving output to Data_Clean for easier access"
+"0","Regional_Crime_Rate_Changes_per_100k_2020_2023_rds_path <- here(""Data_Clean"", ""Regional_Crime_Rate_Changes_per_100k_2020_2023.rds"")"
+"0","saveRDS(Regional_Crime_Rate_Changes_per_100k_2020_2023, Regional_Crime_Rate_Changes_per_100k_2020_2023_rds_path)"

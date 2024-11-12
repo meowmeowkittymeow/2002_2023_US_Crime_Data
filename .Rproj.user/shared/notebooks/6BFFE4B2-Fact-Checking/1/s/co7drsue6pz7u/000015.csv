@@ -21,3 +21,7 @@
 "0",""
 "0","# Binding 1990-200 and 2001-2023 crime rates"
 "0","Crime_Rates_1990_2023 <- rbind(Fact_Checked_1990_2000, CIUS_2001_2023_Rates)"
+"0",""
+"0","# Saving output to Data_Clean for easier access"
+"0","Crime_Rates_1990_2023_rds <- here(""Data_Clean"", ""Crime_Rates_1990_2023.rds"")"
+"0","saveRDS(Crime_Rates_1990_2023, Crime_Rates_1990_2023_rds)"
