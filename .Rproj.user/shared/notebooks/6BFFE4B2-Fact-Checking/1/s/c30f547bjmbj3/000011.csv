@@ -25,5 +25,5 @@
 "0","City_Changes_Reported_Murders_2020_2023 <- rbind(Changes_Reported_Murders_Cities, Changes_Reported_Murders_ABP)"
 "0",""
 "0","# Saving output to Data_Clean for easier access"
-"0","City_Changes_Reported_Murders_2020_2023_rds_path <- here(""Data_Clean"", ""City_Changes_Reported_Murders_2020_2023.rds"")"
-"0","saveRDS(City_Changes_Reported_Murders_2020_2023, City_Changes_Reported_Murders_2020_2023_rds_path)"
+"0","City_Changes_Reported_Murders_2020_2023_excel_path <- here(""Data_Clean"", ""City_Changes_Reported_Murders_2020_2023.xlsx"")"
+"0","write_xlsx(City_Changes_Reported_Murders_2020_2023, City_Changes_Reported_Murders_2020_2023_excel_path)"

@@ -17,5 +17,5 @@
 "0",")"
 "0",""
 "0","# Saving output to Data_Clean for easier access"
-"0","Regional_Crime_Rate_Changes_per_100k_2020_2023_rds_path <- here(""Data_Clean"", ""Regional_Crime_Rate_Changes_per_100k_2020_2023.rds"")"
-"0","saveRDS(Regional_Crime_Rate_Changes_per_100k_2020_2023, Regional_Crime_Rate_Changes_per_100k_2020_2023_rds_path)"
+"0","Regional_Crime_Rate_Changes_per_100k_2020_2023_excel_path <- here(""Data_Clean"", ""Regional_Crime_Rate_Changes_per_100k_2020_2023.xlsx"")"
+"0","write_xlsx(Regional_Crime_Rate_Changes_per_100k_2020_2023, Regional_Crime_Rate_Changes_per_100k_2020_2023_excel_path)"

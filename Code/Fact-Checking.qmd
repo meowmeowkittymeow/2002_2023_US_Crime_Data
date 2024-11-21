@@ -6,6 +6,7 @@ library(mosaic)
 library(tidyverse)
 library(ggplot2)
 library(readxl)
+library(writexl)
 library(plotly)
 library(dplyr)
 library(readr)
@@ -190,9 +191,11 @@ Fact_Checked_1990_2000 <- Fact_Checked_1990_2000 |>
 # Binding 1990-200 and 2001-2023 crime rates
 Crime_Rates_1990_2023 <- rbind(Fact_Checked_1990_2000, CIUS_2001_2023_Rates)
 
-# Saving output to Data_Clean for easier access
-Crime_Rates_1990_2023_rds <- here("Data_Clean", "Crime_Rates_1990_2023.rds")
-saveRDS(Crime_Rates_1990_2023, Crime_Rates_1990_2023_rds)
+# Specify the file path for the Excel file
+Crime_Rates_1990_2023_excel <- here("Data_Clean", "Crime_Rates_1990_2023.xlsx")
+
+# Save the data frame as an Excel file
+write_xlsx(Crime_Rates_1990_2023, Crime_Rates_1990_2023_excel)
 ```
 
 
@@ -320,8 +323,8 @@ Regional_Crime_Rate_Changes_per_100k_2020_2023 <- Crime_Rates_2020_2023 |>
 )
 
 # Saving output to Data_Clean for easier access
-Regional_Crime_Rate_Changes_per_100k_2020_2023_rds_path <- here("Data_Clean", "Regional_Crime_Rate_Changes_per_100k_2020_2023.rds")
-saveRDS(Regional_Crime_Rate_Changes_per_100k_2020_2023, Regional_Crime_Rate_Changes_per_100k_2020_2023_rds_path)
+Regional_Crime_Rate_Changes_per_100k_2020_2023_excel_path <- here("Data_Clean", "Regional_Crime_Rate_Changes_per_100k_2020_2023.xlsx")
+write_xlsx(Regional_Crime_Rate_Changes_per_100k_2020_2023, Regional_Crime_Rate_Changes_per_100k_2020_2023_excel_path)
 ```
 
 ### Changes in Murder Rate by Major City
@@ -433,7 +436,7 @@ Changes_Reported_Murders_ABP <- Changes_Reported_Murders_ABP |>
 City_Changes_Reported_Murders_2020_2023 <- rbind(Changes_Reported_Murders_Cities, Changes_Reported_Murders_ABP)
 
 # Saving output to Data_Clean for easier access
-City_Changes_Reported_Murders_2020_2023_rds_path <- here("Data_Clean", "City_Changes_Reported_Murders_2020_2023.rds")
-saveRDS(City_Changes_Reported_Murders_2020_2023, City_Changes_Reported_Murders_2020_2023_rds_path)
+City_Changes_Reported_Murders_2020_2023_excel_path <- here("Data_Clean", "City_Changes_Reported_Murders_2020_2023.xlsx")
+write_xlsx(City_Changes_Reported_Murders_2020_2023, City_Changes_Reported_Murders_2020_2023_excel_path)
 ```
 
