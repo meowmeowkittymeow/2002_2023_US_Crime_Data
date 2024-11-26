@@ -300,6 +300,13 @@ Regional_Crime_Rate_Changes_2020_2023 <- Crime_Rates_2020_2023 |>
     Property_Crimes_Rate_2023 = Property_Crimes_Rate[Year == 2023],
     Change_Property_Crimes_Rate = (Property_Crimes_Rate_2023 - Property_Crimes_Rate_2020) / Property_Crimes_Rate_2020,
 )
+
+# Removing Pacific Region
+Regional_Crime_Rate_Changes_2020_2023 <- Regional_Crime_Rate_Changes_2020_2023[-c(4), ]
+
+# Saving output to Data_Clean for easier access
+Regional_Crime_Rate_Changes_2020_2023_path <- here("Data_Clean", "Regional_Crime_Rate_Changes_2020_2023.xlsx")
+write_xlsx(Regional_Crime_Rate_Changes_2020_2023, Regional_Crime_Rate_Changes_2020_2023_path)
 ```
 
 
@@ -321,6 +328,9 @@ Regional_Crime_Rate_Changes_per_100k_2020_2023 <- Crime_Rates_2020_2023 |>
     Property_Crime_Rate_2023_per_100k = Property_Crimes_per_100k[Year == 2023],
     Change_Property_Crime_Rate_per_100k = (Property_Crime_Rate_2023_per_100k - Property_Crime_Rate_2020_per_100k) / Property_Crime_Rate_2020_per_100k,
 )
+
+# Removing Pacific Region
+Regional_Crime_Rate_Changes_per_100k_2020_2023 <- Regional_Crime_Rate_Changes_per_100k_2020_2023[-c(4), ]
 
 # Saving output to Data_Clean for easier access
 Regional_Crime_Rate_Changes_per_100k_2020_2023_excel_path <- here("Data_Clean", "Regional_Crime_Rate_Changes_per_100k_2020_2023.xlsx")
@@ -364,7 +374,6 @@ Reported_Murders_Large_Cities_2020 <- Reported_Murders_Large_Cities_2020 |>
 #| label: Tidying 2023 Large City Data
 #| message: false
 
-
 Reported_Murders_Large_Cities_2023_Path <- here("Data_Raw", "Table_8_Offenses_Known_to_Law_Enforcement_by_State_by_City_2023.xlsx")
 
 Reported_Murders_Large_Cities_2023 <- read_excel(Reported_Murders_Large_Cities_2023_Path)
@@ -382,7 +391,14 @@ Reported_Murders_Large_Cities_2023 <- Reported_Murders_Large_Cities_2023[-c(1:3,
 Reported_Murders_Large_Cities_2023 <- Reported_Murders_Large_Cities_2023 |>
   mutate(Population_2023 = as.numeric(Population),
     `Murder and\r\nnonnegligent\r\nmanslaughter` = as.numeric(`Murder and\r\nnonnegligent\r\nmanslaughter`)
-  ) |>
+  )
+
+# Pulling 2023 NYC population to use later
+NYC_Population_2023 <- Reported_Murders_Large_Cities_2023 |>
+  filter(City == "New York") |>
+  pull(Population_2023)
+
+Reported_Murders_Large_Cities_2023 <- Reported_Murders_Large_Cities_2023 |>
   select(City, Population_2023, `Murder and\r\nnonnegligent\r\nmanslaughter`) |>
   rename(Murders_2023 = `Murder and\r\nnonnegligent\r\nmanslaughter`)
 
@@ -410,6 +426,7 @@ Reported_Murders_Large_Cities_2023 <- Reported_Murders_Large_Cities_2023 |>
 
 ```{r}
 #| label: Joining 2020 and 2023 data
+#| message: false
 
 # Creating list of cities in previous table
 Cities <- c("New York, New York", "Los Angeles, California", "Chicago, Illinois", "Houston, Texas", "Philadelphia, Pennsylvania", "San Francisco, California", "Baltimore, Maryland", "Washington, District of Columbia", "Atlanta, Georgia", "Detroit, Michigan", "New Orleans, Louisiana", "Memphis, Tennessee", "Seattle, Washington")
@@ -427,10 +444,24 @@ Changes_Reported_Murders_ABP_Path <- here("Data_Raw", "Change_Murder_Rate_2020_2
 
 Changes_Reported_Murders_ABP <- read_excel(Changes_Reported_Murders_ABP_Path)
 
+# Extracting just Atlanta, Baltimore, and Phladelphia from 2023 Table 8
+ABP <- c("Atlanta, Georgia", "Baltimore, Maryland", "Philadelphia, Pennsylvania")
+
+Murder_Rate_2023_ABP <- Reported_Murders_Large_Cities_2023 |>
+  filter(City %in% ABP) |>
+  select(City, Murder_Rate_2023)
+
+# Calculating 2020 murder rates using 2022 murder rates from website graph
 Changes_Reported_Murders_ABP <- Changes_Reported_Murders_ABP |>
-  mutate(Murder_Rate_2023 = Murder_Rate_2020 / (1 + Change_Murder_Rate_2020_2022),
-         Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) / Murder_Rate_2020) |>
+  mutate(Murder_Rate_2020 = Murder_Rate_2022 / (1 + Change_Murder_Rate_2020_2022),
+         Change_Murder_Rate_2020_2022 = (Murder_Rate_2022 - Murder_Rate_2020) / Murder_Rate_2020) |>
   select(-Change_Murder_Rate_2020_2022)
+
+Changes_Reported_Murders_ABP <- inner_join(Changes_Reported_Murders_ABP, Murder_Rate_2023_ABP) 
+
+Changes_Reported_Murders_ABP <- Changes_Reported_Murders_ABP |>
+  mutate(Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) / Murder_Rate_2020) |>
+  select(-Murder_Rate_2022)
 
 #Binding city tables
 City_Changes_Reported_Murders_2020_2023 <- rbind(Changes_Reported_Murders_Cities, Changes_Reported_Murders_ABP)
@@ -438,5 +469,77 @@ City_Changes_Reported_Murders_2020_2023 <- rbind(Changes_Reported_Murders_Cities
 # Saving output to Data_Clean for easier access
 City_Changes_Reported_Murders_2020_2023_excel_path <- here("Data_Clean", "City_Changes_Reported_Murders_2020_2023.xlsx")
 write_xlsx(City_Changes_Reported_Murders_2020_2023, City_Changes_Reported_Murders_2020_2023_excel_path)
+```
+
+```{r}
+#| label: Recalculating large city changes in murder using NYPD 2023 murder data
+#| message: false
+
+# Reading in data
+NYC_NYPD_2023_Murder_Rate_Path <- here("Data_Raw", "seven-major-felony-offenses-2000-2023.xls")
+
+NYC_NYPD_Murder_Rates <- read_excel(NYC_NYPD_2023_Murder_Rate_Path)
+
+# Removing headers and notes
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates[-c(1:2, 12:18), ]
+
+# Extracting and reassigning all column names
+colnames(NYC_NYPD_Murder_Rates) <- as.character(NYC_NYPD_Murder_Rates[1, ])
+
+# Removing column names from row
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates[-c(1), ]
+
+# Making values numeric
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates |>
+  mutate(across(-"OFFENSE", as.numeric))
+
+# Pivoting data to make years cases and crimes variables
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates |>
+  pivot_longer(
+    cols = starts_with("20"),  # Columns starting with years (not applying following to offense)
+    names_to = "Year",         # Name for the new year column
+    values_to = "Count"        # Name for the new count column
+  )
+
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates |>
+  pivot_wider(
+    names_from = OFFENSE,  # Crime types become columns
+    values_from = Count    # Values filled in with counts
+  )
+
+# Adding population to to determine murder rate
+NYC_NYPD_Murder_Rates$Population <- NYC_Population_2023
+
+# Filtering for just the 2023 data
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates |>
+  filter(Year == 2023 | Year == 2020) |>
+  rename(Murders = `MURDER & NON-NEGL. MANSLAUGHTER`) |>
+  mutate(Murder_Rate = (Murders/Population) * 100000)
+
+# Adding city name
+NYC_NYPD_Murder_Rates$City <- "New York, New York"
+
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates |>
+  select(Year, City, Murder_Rate)
+
+# Pivoting to make NYC a row
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates |>
+  pivot_wider(
+    names_from = Year,               # Use the 'Year' column to create new columns
+    values_from = c(Murder_Rate),  # Spread both Murders and Murder_Rate
+    names_glue = "{.value}_{Year}"   # Name the new columns as Murders_2020, Murder_Rate_2020, etc.
+  ) 
+
+# Adding change in rate variable
+NYC_NYPD_Murder_Rates <- NYC_NYPD_Murder_Rates |>
+  mutate(Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) / Murder_Rate_2020,
+)
+
+# Removing FBI NYC murder rate data
+Changes_Reported_Murders_Cities_No_NYC <- Changes_Reported_Murders_Cities |>
+  filter(City != "New York, New York")
+
+# Binding tables
+City_Changes_Reported_Murders_2020_2023_NYPD <- rbind(Changes_Reported_Murders_Cities_No_NYC, NYC_NYPD_Murder_Rates, Changes_Reported_Murders_ABP)
 ```
 
