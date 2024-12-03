@@ -3,7 +3,7 @@
     "path": "~/Desktop/2002_2023_US_Crime_Data/Code/Fact-Checking.qmd",
     "project_path": "Code/Fact-Checking.qmd",
     "type": "quarto_markdown",
-    "hash": "3475302742",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1731427013409.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "308,92",
-        "scrollLine": "268"
+        "cursorPosition": "567,0",
+        "scrollLine": "557"
     },
     "folds": "",
-    "lastKnownWriteTime": 1732648476,
+    "lastKnownWriteTime": 1733245906,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1732648476678,
+    "last_content_update": 1733245906757,
     "read_only": false,
     "read_only_alternatives": []
 }

@@ -435,10 +435,20 @@ Cities <- c("New York, New York", "Los Angeles, California", "Chicago, Illinois"
 Changes_Reported_Murders_Cities <- left_join(Reported_Murders_Large_Cities_2020, Reported_Murders_Large_Cities_2023, by = "City") |>
   drop_na() |> # Dropping cities missing data
   mutate(Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) / Murder_Rate_2020) |>
-  filter(City %in% Cities) |> #Filter out all irrelevant cities
-  select(-Population_2020, -Murders_2020, -Population_2023, -Murders_2023, )
+  filter(City %in% Cities) #Filter out all irrelevant cities
 
-# Loading in 2020 data for Atlanta, Baltimore, and Philadelphia and calculating 2020 murder rates and 2020-2023 change
+# Saving populations to append later
+City_Populations_2023 <- Changes_Reported_Murders_Cities |>
+  select(City, Population_2023)
+
+# Removing unecessary columns
+Changes_Reported_Murders_Cities <- Changes_Reported_Murders_Cities |> select(-Population_2020, -Murders_2020, -Population_2023, -Murders_2023, )
+```
+
+
+```{r}
+#| label: Loading in 2020 data for Atlanta, Baltimore, and Philadelphia and calculating 2020 murder rates and 2020-2023 change
+#| message: false
 
 Changes_Reported_Murders_ABP_Path <- here("Data_Raw", "Change_Murder_Rate_2020_2022_ABP.xlsx")
 
@@ -463,7 +473,15 @@ Changes_Reported_Murders_ABP <- Changes_Reported_Murders_ABP |>
   mutate(Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) / Murder_Rate_2020) |>
   select(-Murder_Rate_2022)
 
-#Binding city tables
+# Saving populations to append later
+ABP_Populations_2023 <- Reported_Murders_Large_Cities_2023 |>
+  filter(City %in% ABP) |>
+  select(City, Population_2023)
+```
+
+```{r}
+#| label: Binding city tables
+
 City_Changes_Reported_Murders_2020_2023 <- rbind(Changes_Reported_Murders_Cities, Changes_Reported_Murders_ABP)
 
 # Saving output to Data_Clean for easier access
@@ -541,5 +559,13 @@ Changes_Reported_Murders_Cities_No_NYC <- Changes_Reported_Murders_Cities |>
 
 # Binding tables
 City_Changes_Reported_Murders_2020_2023_NYPD <- rbind(Changes_Reported_Murders_Cities_No_NYC, NYC_NYPD_Murder_Rates, Changes_Reported_Murders_ABP)
+```
+
+```{r}
+#| label: Adding 2023 populations
+
+City_Populations_2023 <- rbind(City_Populations_2023, ABP_Populations_2023)
+
+City_Changes_Reported_Murders_2020_2023_NYPD <- inner_join(City_Changes_Reported_Murders_2020_2023_NYPD, City_Populations_2023, by = "City")
 ```
 
