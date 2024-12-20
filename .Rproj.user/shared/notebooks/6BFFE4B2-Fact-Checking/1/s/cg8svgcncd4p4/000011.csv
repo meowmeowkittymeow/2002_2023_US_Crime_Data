@@ -1,0 +1,13 @@
+"0","ABP <- c(""Atlanta, Georgia"", ""Baltimore, Maryland"", ""Philadelphia, Pennsylvania"")
+
+# Extracting just Atlanta, Baltimore, and Philadelphia from 2023 Table 8
+Murder_Rates_2023_ABP <- Reported_Murders_All_Cities_2023 |>
+  filter(City %in% ABP) |>
+  select(City, Murders_2023, Population_2023) |>
+  mutate(Murder_Rate_2023 = Murders_2023/Population_2023)
+
+Change_Murder_Rates_ABP <- Murder_Rates_2020_ABP |>
+  inner_join(Murder_Rates_2023_ABP, by = c(""City"" = ""City""))
+"
+"2","Error: object 'Murder_Rates_2020_ABP' not found
+"

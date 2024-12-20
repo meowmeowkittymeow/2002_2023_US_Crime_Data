@@ -1,5 +1,0 @@
-"0","#| label: Adding 2023 populations"
-"0",""
-"0","City_Populations_2023 <- rbind(City_Populations_2023, ABP_Populations_2023)"
-"0",""
-"0","City_Changes_Reported_Murders_2020_2023_NYPD <- inner_join(City_Changes_Reported_Murders_2020_2023_NYPD, City_Populations_2023, by = ""City"")"
