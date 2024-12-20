@@ -17,5 +17,3 @@
 "0","  summarise(Murders_2020 = n())"
 "0",""
 "0","Murders_2020_B$City <- ""Baltimore, Maryland"""
-"0",""
-"0","######### I got 332 murders, you got 334!!!!!!!!!!!"

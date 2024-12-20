@@ -31,4 +31,5 @@
 "0",""
 "0","# Calculate the Murder rates"
 "0","Reported_Murders_All_Cities_2023 <- Reported_Murders_All_Cities_2023 |>"
-"0","  mutate(Murder_Rate_2023 = ifelse(Murders_2023 == 0, NA, (Murders_2023 / Population_2023) * 100000))"
+"0","  drop_na() |>"
+"0","  mutate(Murder_Rate_2023 = (Murders_2023 / Population_2023))"

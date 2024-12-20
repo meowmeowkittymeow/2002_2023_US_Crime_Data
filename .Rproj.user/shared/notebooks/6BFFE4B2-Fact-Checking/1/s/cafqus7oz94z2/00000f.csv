@@ -1,3 +1,0 @@
-"0","# Binding tables"
-"0","Change_Murder_Rates_Large_Cities_2020_2023 <- rbind(Change_Murder_Rates_Large_Cities, Change_Murder_Rates_NYC_NYPD, Change_Murder_Rates_ABP) |>"
-"0","  unique()"

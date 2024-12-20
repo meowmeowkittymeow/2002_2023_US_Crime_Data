@@ -372,7 +372,7 @@ Reported_Murders_All_Cities_2020 <- Reported_Murders_All_Cities_2020 |>
 Reported_Murders_All_Cities_2020 <- Reported_Murders_All_Cities_2020 |>
   # If there is no data on murders or it equals 0, do not calculate murder rate. Otherwise,
   # calculate murder rate.
-  mutate(Murder_Rate_2020 = ifelse(Murders_2020 == 0, NA, (Murders_2020 / Population_2020) * 100000))
+  mutate(Murder_Rate_2020 = ifelse(Murders_2020 == 0, NA, (Murders_2020 / Population_2020)))
 ```
 
 ```{r}
@@ -409,7 +409,8 @@ Reported_Murders_All_Cities_2023 <- Reported_Murders_All_Cities_2023 |>
 
 # Calculate the Murder rates
 Reported_Murders_All_Cities_2023 <- Reported_Murders_All_Cities_2023 |>
-  mutate(Murder_Rate_2023 = ifelse(Murders_2023 == 0, NA, (Murders_2023 / Population_2023) * 100000))
+  drop_na() |>
+  mutate(Murder_Rate_2023 = (Murders_2023 / Population_2023))
 ```
 
 ```{r}
@@ -497,7 +498,7 @@ Change_Murder_Rates_ABP <- Murder_Rates_2020_ABP |>
   inner_join(Murder_Rates_2023_ABP, by = c("City" = "City"))
 
 Change_Murder_Rates_ABP <- Change_Murder_Rates_ABP |>
-  mutate(Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020)/Murder_Rate_2020)
+  mutate(Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) /Murder_Rate_2020)
 ```
 
 ```{r}
@@ -507,17 +508,28 @@ Change_Murder_Rates_ABP <- Change_Murder_Rates_ABP |>
 # Creating list of cities in previous table
 Cities <- c("Los Angeles, California", "Chicago, Illinois", "Houston, Texas", "San Francisco, California", "Washington, District of Columbia", "Atlanta, Georgia", "Detroit, Michigan", "New Orleans, Louisiana", "Memphis, Tennessee", "Seattle, Washington")
 
-# Using left-join to include only the cities in both data frames, as they have different counts
 Change_Murder_Rates_Large_Cities <- left_join(Reported_Murders_All_Cities_2020, Reported_Murders_All_Cities_2023, by = "City") |>
   drop_na() |> # Dropping cities missing data
-  mutate(Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) / Murder_Rate_2020) |>
-  filter(City %in% Cities) #Filter out all irrelevant cities
+  mutate(
+    # Scale murder rates to per 100,000 if they are per capita
+    Change_Murder_Rate_2020_2023 = (Murder_Rate_2023 - Murder_Rate_2020) / Murder_Rate_2020
+  ) |>
+  filter(City %in% Cities) # Filter out all irrelevant cities
 ```
 
 ```{r}
 #| label: Binding murder data of all cities -NYC 
 
 Change_Murder_Rates_Large_Cities <- rbind(Change_Murder_Rates_Large_Cities, Change_Murder_Rates_ABP)
+
+Change_Murder_Rates_Large_Cities_2020_2023 <- Change_Murder_Rates_Large_Cities_2020_2023 |>
+  mutate(
+    # Format for display (do not alter actual values, keep them numeric)
+    Murder_Rate_2020 = format(as.numeric(Murder_Rate_2020), scientific = FALSE),
+    Murder_Rate_2023 = format(as.numeric(Murder_Rate_2023), scientific = FALSE),
+    Change_Murder_Rate_2020_2023 = format(as.numeric(Change_Murder_Rate_2020_2023), scientific = FALSE)
+  )
+
 ```
 
 ```{r}

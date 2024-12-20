@@ -1,1 +1,0 @@
-{"frames":[{"func":"inner_join(Murder_Rates_2020_ABP, Murder_Rates_2023_ABP, by = c(City = \"City\"))","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error: object 'Murder_Rates_2020_ABP' not found\n"}
