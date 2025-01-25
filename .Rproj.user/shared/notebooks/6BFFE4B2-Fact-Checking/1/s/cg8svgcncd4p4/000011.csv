@@ -7,7 +7,7 @@
 "0","Murder_Rates_2023_ABP <- Reported_Murders_All_Cities_2023 |>"
 "0","  filter(City %in% ABP) |>"
 "0","  select(City, Murders_2023, Population_2023) |>"
-"0","  mutate(Murder_Rate_2023 = Murders_2023/Population_2023)"
+"0","  mutate(Murder_Rate_2023 = Murders_2023 / Population_2023)"
 "0",""
 "0","Change_Murder_Rates_ABP <- Murder_Rates_2020_ABP |>"
 "0","  inner_join(Murder_Rates_2023_ABP, by = c(""City"" = ""City""))"

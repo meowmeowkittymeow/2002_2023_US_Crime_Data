@@ -479,7 +479,7 @@ ABP_Populations_2020 <- tibble(
 
 Murder_Rates_2020_ABP <- Murders_2020_ABP |>
   inner_join(ABP_Populations_2020, by = c("City" = "City"))|>
-  mutate(Murder_Rate_2020 = Murders_2020/Population_2020)
+  mutate(Murder_Rate_2020 = Murders_2020 / Population_2020)
 ```
 
 ```{r}
@@ -492,7 +492,7 @@ ABP <- c("Atlanta, Georgia", "Baltimore, Maryland", "Philadelphia, Pennsylvania"
 Murder_Rates_2023_ABP <- Reported_Murders_All_Cities_2023 |>
   filter(City %in% ABP) |>
   select(City, Murders_2023, Population_2023) |>
-  mutate(Murder_Rate_2023 = Murders_2023/Population_2023)
+  mutate(Murder_Rate_2023 = Murders_2023 / Population_2023)
 
 Change_Murder_Rates_ABP <- Murder_Rates_2020_ABP |>
   inner_join(Murder_Rates_2023_ABP, by = c("City" = "City"))

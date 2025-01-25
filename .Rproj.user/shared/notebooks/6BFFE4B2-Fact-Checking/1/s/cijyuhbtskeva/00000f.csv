@@ -11,4 +11,4 @@
 "0",""
 "0","Murder_Rates_2020_ABP <- Murders_2020_ABP |>"
 "0","  inner_join(ABP_Populations_2020, by = c(""City"" = ""City""))|>"
-"0","  mutate(Murder_Rate_2020 = Murders_2020/Population_2020)"
+"0","  mutate(Murder_Rate_2020 = Murders_2020 / Population_2020)"
